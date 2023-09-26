@@ -20,9 +20,9 @@ describe("POST /users", () => {
   describe("given a username and password", () => {
     test("should save the username and password to the database", async () => {
       const bodyData = [
-        {username: "username1", password: "password1"},
-        {username: "username2", password: "password2"},
-        {username: "username3", password: "password3"},
+        { username: "Danilo", password: "imissyouuwu" },
+        { username: "Gipsy", password: "softwareQA" },
+        { username: "Nick", password: "GiveMeJobPlease" },
       ]
       for (const body of bodyData) {
         createUser.mockReset()
@@ -37,29 +37,29 @@ describe("POST /users", () => {
       for (let i = 0; i < 10; i++) {
         createUser.mockReset()
         createUser.mockResolvedValue(i)
-        const response = await request(app).post("/users").send({ username: "username", password: "password" })
+        const response = await request(app).post("/users").send({ username: "Danilo", password: "imissyouuwu" })
         expect(response.body.userId).toBe(i)
       }
     })
 
     test("should respond with a 200 status code", async () => {
       const response = await request(app).post("/users").send({
-        username: "username",
-        password: "password"
+        username: "Danilo", 
+        password: "imissyouuwu"
       })
       expect(response.statusCode).toBe(200)
     })
     test("should specify json in the content type header", async () => {
       const response = await request(app).post("/users").send({
-        username: "username",
-        password: "password"
+        username: "Danilo", 
+        password: "imissyouuwu"
       })
       expect(response.headers['content-type']).toEqual(expect.stringContaining("json"))
     })
     test("response has userId", async () => {
       const response = await request(app).post("/users").send({
-        username: "username",
-        password: "password"
+        username: "Danilo", 
+        password: "imissyouuwu"
       })
       expect(response.body.userId).toBeDefined()
     })
