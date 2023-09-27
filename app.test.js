@@ -17,6 +17,7 @@ describe("POST /users", () => {
     createUser.mockResolvedValue(0)
   })
 
+  /* Happy Path */
   describe("given a username and password", () => {
     test("should save the username and password to the database", async () => {
       const bodyData = [
@@ -65,6 +66,7 @@ describe("POST /users", () => {
     })
   })
 
+  /* Bad Path */
   describe("when the username and password is missing", () => {
     test("should respond with a status code of 400", async () => {
       const bodyData = [
@@ -78,5 +80,37 @@ describe("POST /users", () => {
       }
     })
   })
-
 })
+
+describe("GET /users/:username", () => {
+  beforeEach(() => {
+    getUser.mockReset();
+  });
+
+  /* Happy Path */
+  test("should retrieve user data by username", async () => {
+    const mockUser = { id: 1, username: "TestUser" };
+    getUser.mockResolvedValue(mockUser);
+
+    // Make a GET request to retrieve user data
+    const response = await request(app).get("/users/TestUser");
+
+    // Expectations
+    expect(getUser.mock.calls.length).toBe(1);
+    expect(getUser.mock.calls[0][0]).toBe("TestUser");
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(mockUser);
+  });
+
+  /* Bad Path */
+  test("should respond with 404 if user is not found", async () => {
+    getUser.mockResolvedValue(null);
+
+    // Make a GET request for a non-existent user
+    const response = await request(app).get("/users/NonExistentUser");
+
+    // Expectations
+    expect(getUser.mock.calls.length).toBe(1);
+    expect(response.statusCode).toBe(404);
+  });
+});
