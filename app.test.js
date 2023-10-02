@@ -17,9 +17,9 @@ describe("POST /users", () => {
     createUser.mockResolvedValue(0)
   })
 
-  /* Happy Path */
-  describe("given a username and password", () => {
-    test("should save the username and password to the database", async () => {
+  /* Verificacion de funcionamiento */
+  describe("dado un nombre de usuario y contraseña", () => {
+    test("debería guardar el nombre de usuario y la contraseña en la base de datos", async () => {
       const bodyData = [
         { username: "Danilo", password: "imissyouuwu" },
         { username: "Gipsy", password: "softwareQA" },
@@ -34,7 +34,7 @@ describe("POST /users", () => {
       }
     })
 
-    test("should respond with a json object containg the user id", async () => {
+    test("debería responder con un objeto JSON que contiene el ID de usuario", async () => {
       for (let i = 0; i < 10; i++) {
         createUser.mockReset()
         createUser.mockResolvedValue(i)
@@ -43,21 +43,21 @@ describe("POST /users", () => {
       }
     })
 
-    test("should respond with a 200 status code", async () => {
+    test("debería responder con un código de estado 200", async () => {
       const response = await request(app).post("/users").send({
         username: "Danilo", 
         password: "imissyouuwu"
       })
       expect(response.statusCode).toBe(200)
     })
-    test("should specify json in the content type header", async () => {
+    test("debería especificar 'json' en la cabecera del tipo de contenido", async () => {
       const response = await request(app).post("/users").send({
         username: "Danilo", 
         password: "imissyouuwu"
       })
       expect(response.headers['content-type']).toEqual(expect.stringContaining("json"))
     })
-    test("response has userId", async () => {
+    test("la respuesta tiene el ID de usuario", async () => {
       const response = await request(app).post("/users").send({
         username: "Danilo", 
         password: "imissyouuwu"
@@ -66,9 +66,9 @@ describe("POST /users", () => {
     })
   })
 
-  /* Bad Path */
-  describe("when the username and password is missing", () => {
-    test("should respond with a status code of 400", async () => {
+  /* Verificacion de errores */
+  describe("cuando falta el nombre de usuario y la contraseña", () => {
+    test("debería responder con un código de estado 400", async () => {
       const bodyData = [
         {username: "username"},
         {password: "password"},
@@ -87,29 +87,29 @@ describe("GET /users/:username", () => {
     getUser.mockReset();
   });
 
-  /* Happy Path */
-  test("should retrieve user data by username", async () => {
-    const mockUser = { id: 1, username: "TestUser" };
+  /* Verificacion de funcionamiento */
+  test("debería recuperar los datos del usuario por nombre de usuario", async () => {
+    const mockUser = { id: 1, username: "UsuarioPrueba" };
     getUser.mockResolvedValue(mockUser);
 
-    // Make a GET request to retrieve user data
-    const response = await request(app).get("/users/TestUser");
+    // Hacer una solicitud GET para recuperar los datos del usuario
+    const response = await request(app).get("/users/UsuarioPrueba");
 
-    // Expectations
+    // Expectativas
     expect(getUser.mock.calls.length).toBe(1);
-    expect(getUser.mock.calls[0][0]).toBe("TestUser");
+    expect(getUser.mock.calls[0][0]).toBe("UsuarioPrueba");
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(mockUser);
   });
 
-  /* Bad Path */
-  test("should respond with 404 if user is not found", async () => {
+  /* Verificacion de errores */
+  test("debería responder con un código 404 si el usuario no se encuentra", async () => {
     getUser.mockResolvedValue(null);
 
-    // Make a GET request for a non-existent user
-    const response = await request(app).get("/users/NonExistentUser");
+    // Hacer una solicitud GET para un usuario que no existe
+    const response = await request(app).get("/users/UsuarioNoExistente");
 
-    // Expectations
+    // Expectativas
     expect(getUser.mock.calls.length).toBe(1);
     expect(response.statusCode).toBe(404);
   });
